@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: hostelfindr-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn hostelfindr.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true          # Render auto-generates a secure value
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: hostelfindr-backend.onrender.com
+      - key: MONGO_URI
+        sync: false                  # Set manually in Render dashboard (MongoDB Atlas URI)
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://hostelfindr.vercel.app
+      - key: ACCESS_TOKEN_LIFETIME
+        value: "900"
+      - key: REFRESH_TOKEN_LIFETIME
+        value: "604800"
+    autoDeploy: true
